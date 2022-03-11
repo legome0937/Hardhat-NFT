@@ -184,15 +184,7 @@ contract MechaShibasNFT is ERC721, Ownable, Pausable, ReentrancyGuard {
         payable(msg.sender).transfer(balance);
     }
 
-    function setSaleStarted(bool _hasStarted) external onlyOwner {
-        require(saleStarted != _hasStarted, "SALE_STARTED_ALREADY_SET");
-        saleStarted = _hasStarted;
-    }
-
-    function setPreSaleStarted(bool _hasStarted) external onlyOwner {
-        require(preSaleStarted != _hasStarted, "PRESALE_STARTED_ALREADY_SET");
-        preSaleStarted = _hasStarted;
-    }
+   
 
     function setBaseURI(string memory _newBaseURI) public onlyOwner {
         baseURI = _newBaseURI;
