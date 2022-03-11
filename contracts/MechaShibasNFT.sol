@@ -42,7 +42,7 @@ contract MechaShibasNFT is ERC721, Ownable, Pausable, ReentrancyGuard {
     string public baseURI;
     string public notRevealedURI;
 
-    // Merkle Tree Root
+    // Merkle Tree Root 
     bytes32 private _merkleRoot;
 
     mapping(address => uint256) balanceOfAddress;
