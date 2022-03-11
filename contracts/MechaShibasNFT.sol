@@ -126,6 +126,56 @@ contract MechaShibasNFT is ERC721, Ownable, Pausable, ReentrancyGuard {
         totalSupply += _count;
     }
 
+    /**
+     * Mint Single or Multiple NFT tokens
+     */
+    function mint(uint256 _count) public payable {
+        require(saleStarted, "MINT_NOT_STARTED");
+        uint256 ownerTokenCount = balanceOf(msg.sender);
+        require(
+            _count > 0 && ownerTokenCount + _count <= MAX_MINT_PER_PUB,
+            "COUNT_INVALID"
+        );
+        require(totalSupply + _count <= MAX_SUPPLY, "MAX_SUPPLY_REACHED");
+
+        if (msg.sender != owner()) {
+            require(msg.value >= MINT_PRICE_PUBLIC * _count);
+        }
+
+        for (uint256 i = 1; i <= _count; i++) {
+            _safeMint(msg.sender, totalSupply + i);
+        }
+        totalSupply += _count;
+    }
+
+    /**
+     * Override tokenURI
+     */
+    function tokenURI(uint256 tokenId)
+        public
+        view
+        virtual
+        override
+        returns (string memory)
+    {
+        require(_exists(tokenId), "Token does not exist");
+
+        if (revealed == false) {
+            return notRevealedURI;
+        }
+
+        string memory currentBaseURI = _baseURI();
+        return
+            bytes(currentBaseURI).length > 0
+                ? string(
+                    abi.encodePacked(
+                        currentBaseURI,
+                        tokenId.toString(),
+                        baseExtension
+                    )
+                )
+                : "";
+    }
 
     function withdraw() external onlyOwner {
         require(address(this).balance > 0, "EMPTY_BALANCE");
